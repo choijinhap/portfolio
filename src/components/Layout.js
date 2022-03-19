@@ -14,23 +14,33 @@ import {
 import { useState } from 'react';
 import HomeIcon from '@mui/icons-material/Home';
 
-const StyledAppbar = styled(AppBar)`
-	width: 100%;
-	opacity: 0;
-	transition: opacity 0.5s ease-out;
-	&:hover {
-		opacity: 1;
-	}
-	display: flex;
-	padding: 0;
-	position: fixed;
-	top: 0;
-	left: 0;
-	background-color: transparent;
-	.MuiTabs-flexContainer {
-		justify-content: center;
-	}
-`;
+const StyledAppbar = styled(AppBar)(({ theme }) => ({
+	width: '100%',
+	opacity: 0,
+	transition: 'opacity 0.5s ease-out',
+	'&:hover': {
+		opacity: 1,
+	},
+	display: 'flex',
+	padding: 0,
+	position: 'fixed',
+	top: 0,
+	left: 0,
+	backgroundColor: 'transparent',
+	'.MuiTabs-scrollButtons': {
+		color: theme.palette.primary.main,
+		opacity: 0.5,
+	},
+	'.MuiTabs-scrollButtons.Mui-disabled': {
+		opacity: 0,
+	},
+	[theme.breakpoints.up('sm')]: {
+		'.MuiTabs-flexContainer': {
+			justifyContent: 'center',
+		},
+	},
+}));
+
 const DarkModeSwitch = styled(Switch)(({ theme }) => ({
 	'& .MuiSwitch-switchBase': {
 		margin: 1,
@@ -90,11 +100,15 @@ export default function Layout(props) {
 				<Tabs
 					value={value}
 					onChange={(event, newValue) => {
-						setValue(newValue);
-						props.setPage(newValue);
+						console.log(newValue);
+						if (newValue !== '100') {
+							setValue(newValue);
+							props.setPage(newValue);
+						}
 					}}
 					variant='scrollable'
-					scrollButtons='auto'
+					scrollButtons
+					allowScrollButtonsMobile
 					TabIndicatorProps={{
 						style: {
 							display: 'none',
@@ -117,7 +131,7 @@ export default function Layout(props) {
 								sx={{ justifySelf: 'center', alignSelf: 'center' }}
 							/>
 						}
-						value={value}
+						value='100'
 					></Tab>
 				</Tabs>
 			</StyledAppbar>

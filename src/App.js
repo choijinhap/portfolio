@@ -12,12 +12,12 @@ const darkTheme = createTheme({
 });
 function App() {
 	const [isThemeLight, setIsThemeLight] = useState(true);
-	const [page, setPage] = useState(0);
+	const [page, setPage] = useState('0');
 	return (
 		<ThemeProvider theme={isThemeLight ? lightTheme : darkTheme}>
 			<Layout setIsThemeLight={setIsThemeLight} setPage={setPage}>
-				{page == 0 && <Page1></Page1>}
-				{page == 1 && <Page2></Page2>}
+				{page === '0' && <Page1></Page1>}
+				{page === '1' && <Page2></Page2>}
 			</Layout>
 		</ThemeProvider>
 	);
