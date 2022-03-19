@@ -8,11 +8,13 @@ import {
 	Box,
 	styled,
 	Switch,
+	Tabs,
+	Tab,
 } from '@mui/material';
 import { useState } from 'react';
 import HomeIcon from '@mui/icons-material/Home';
 
-const StyledBox = styled(Box)`
+const StyledAppbar = styled(AppBar)`
 	width: 100%;
 	opacity: 0;
 	transition: opacity 0.5s ease-out;
@@ -21,6 +23,13 @@ const StyledBox = styled(Box)`
 	}
 	display: flex;
 	padding: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: transparent;
+	.MuiTabs-flexContainer {
+		justify-content: center;
+	}
 `;
 const DarkModeSwitch = styled(Switch)(({ theme }) => ({
 	'& .MuiSwitch-switchBase': {
@@ -66,61 +75,53 @@ const DarkModeSwitch = styled(Switch)(({ theme }) => ({
 	},
 }));
 export default function Layout(props) {
-	const [value, setValue] = useState(0);
+	const [value, setValue] = useState('0');
 	const [checked, setChecked] = useState(false);
 	const handleChange = (e) => {
-		props.setIsThemeLight((cur) => !cur);
-		setChecked((cur) => !cur);
+		props.setIsThemeLight((cur) => {
+			setChecked(cur);
+			return !cur;
+		});
 	};
 	return (
-		<Container
-			sx={{
-				maxWidth: '100%',
-				height: '100vh',
-				padding: '0px !important',
-			}}
-		>
+		<div>
 			<CssBaseline />
-			<StyledBox>
-				<BottomNavigation
-					showLabels
+			<StyledAppbar>
+				<Tabs
 					value={value}
 					onChange={(event, newValue) => {
 						setValue(newValue);
+						props.setPage(newValue);
 					}}
-					sx={{ backgroundColor: 'transparent', flexGrow: '0.9' }}
+					variant='scrollable'
+					scrollButtons='auto'
+					TabIndicatorProps={{
+						style: {
+							display: 'none',
+						},
+					}}
 				>
-					<BottomNavigationAction label='Home' icon={<HomeIcon />} />
-					<BottomNavigationAction label='Home' icon={<HomeIcon />} />
-					<BottomNavigationAction label='Home' icon={<HomeIcon />} />
-					<BottomNavigationAction label='Home' icon={<HomeIcon />} />
-					<BottomNavigationAction label='Home' icon={<HomeIcon />} />
-
-					{/* <BottomNavigationAction label='Skills' icon={<FavoriteIcon />} />
-					<BottomNavigationAction label='Projects' icon={<LocationOnIcon />} />
-					<BottomNavigationAction label='Timeline' icon={<LocationOnIcon />} />
-					<BottomNavigationAction label='Contact' icon={<LocationOnIcon />} /> */}
-				</BottomNavigation>
-				<DarkModeSwitch
-					checked={checked}
-					onChange={handleChange}
-					inputProps={{ 'aria-label': 'controlled' }}
-					sx={{ justifySelf: 'center', alignSelf: 'center' }}
-				/>
-			</StyledBox>
-			<Box
-				sx={{
-					width: '100vw',
-					height: '100vh',
-					position: 'absolute',
-					top: '0',
-					left: '0',
-					zIndex: '-1',
-				}}
-			>
-				asd
-			</Box>
+					<Tab label='Home' value='0' icon={<HomeIcon />} disableRipple />
+					<Tab label='Home' value='1' icon={<HomeIcon />} disableRipple />
+					<Tab label='Home' value='2' icon={<HomeIcon />} disableRipple />
+					<Tab label='Home' value='3' icon={<HomeIcon />} disableRipple />
+					<Tab label='Home' value='4' icon={<HomeIcon />} disableRipple />
+					<Tab
+						disableRipple
+						component='span'
+						label={
+							<DarkModeSwitch
+								checked={checked}
+								onChange={handleChange}
+								inputProps={{ 'aria-label': 'controlled' }}
+								sx={{ justifySelf: 'center', alignSelf: 'center' }}
+							/>
+						}
+						value={value}
+					></Tab>
+				</Tabs>
+			</StyledAppbar>
 			{props.children}
-		</Container>
+		</div>
 	);
 }
