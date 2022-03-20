@@ -1,39 +1,22 @@
 import {
 	AppBar,
-	BottomNavigation,
-	BottomNavigationAction,
-	Container,
 	CssBaseline,
 	SvgIcon,
-	Box,
 	styled,
 	Switch,
 	Tabs,
 	Tab,
 	useTheme,
-	Typography,
 } from '@mui/material';
 import { useState } from 'react';
 import HomeIcon from '@mui/icons-material/Home';
 import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
 import Page1 from '../pages/Page1';
 import Page2 from '../pages/Page2';
+import Page3 from '../pages/Page3';
+import Page4 from '../pages/Page4';
+import Page5 from '../pages/Page5';
 
-function TabPanel(props) {
-	const { children, value, index, ...other } = props;
-
-	return (
-		<div
-			role='tabpanel'
-			hidden={value !== index}
-			id={`full-width-tabpanel-${index}`}
-			aria-labelledby={`full-width-tab-${index}`}
-			{...other}
-		>
-			{value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-		</div>
-	);
-}
 const StyledAppbar = styled(AppBar)(({ theme }) => ({
 	width: '100%',
 	opacity: 0,
@@ -106,26 +89,29 @@ const DarkModeSwitch = styled(Switch)(({ theme }) => ({
 }));
 export default function Layout(props) {
 	const theme = useTheme();
-	const [value, setValue] = useState(0);
-	const [checked, setChecked] = useState(false);
-	const handleChange = (e) => {
+	const [page, setPage] = useState(0);
+	const [darkModeChecked, setdarkModeChecked] = useState(false);
+	const handleDarkModeChange = (e) => {
 		props.setIsThemeLight((cur) => {
-			setChecked(cur);
+			setdarkModeChecked(cur);
 			return !cur;
 		});
+	};
+	const handleTabChange = (e, newValue) => {
+		if (newValue !== 100) {
+			setPage(newValue);
+		}
+	};
+	const handleChangeSwipeableViewsIndex = (v) => {
+		setPage(v);
 	};
 	return (
 		<div>
 			<CssBaseline />
 			<StyledAppbar>
 				<Tabs
-					value={value}
-					onChange={(event, newValue) => {
-						if (newValue !== 100) {
-							setValue(newValue);
-							props.setPage(newValue);
-						}
-					}}
+					value={page}
+					onChange={handleTabChange}
 					variant='scrollable'
 					scrollButtons
 					allowScrollButtonsMobile
@@ -145,8 +131,8 @@ export default function Layout(props) {
 						component='span'
 						label={
 							<DarkModeSwitch
-								checked={checked}
-								onChange={handleChange}
+								checked={darkModeChecked}
+								onChange={handleDarkModeChange}
 								inputProps={{ 'aria-label': 'controlled' }}
 								sx={{ justifySelf: 'center', alignSelf: 'center' }}
 							/>
@@ -157,26 +143,15 @@ export default function Layout(props) {
 			</StyledAppbar>
 			<SwipeableViews
 				aixs={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-				index={value}
-				// onChangeIndex={handleChangeIndex}
+				index={page}
+				onChangeIndex={handleChangeSwipeableViewsIndex}
 			>
-				<TabPanel value={value} index={0} dir={theme.direction}>
-					<Page1 />
-				</TabPanel>
-				<TabPanel value={value} index={1} dir={theme.direction}>
-					<Page2 />
-				</TabPanel>
-				<TabPanel value={value} index={2} dir={theme.direction}>
-					<Page2 />
-				</TabPanel>
-				<TabPanel value={value} index={3} dir={theme.direction}>
-					<Page2 />
-				</TabPanel>
-				<TabPanel value={value} index={4} dir={theme.direction}>
-					<Page2 />
-				</TabPanel>
+				<Page1 />
+				<Page2 />
+				<Page3 />
+				<Page4 />
+				<Page5 />
 			</SwipeableViews>
-			{/* {props.children} */}
 		</div>
 	);
 }
