@@ -10,10 +10,30 @@ import {
 	Switch,
 	Tabs,
 	Tab,
+	useTheme,
+	Typography,
 } from '@mui/material';
 import { useState } from 'react';
 import HomeIcon from '@mui/icons-material/Home';
+import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
+import Page1 from '../pages/Page1';
+import Page2 from '../pages/Page2';
 
+function TabPanel(props) {
+	const { children, value, index, ...other } = props;
+
+	return (
+		<div
+			role='tabpanel'
+			hidden={value !== index}
+			id={`full-width-tabpanel-${index}`}
+			aria-labelledby={`full-width-tab-${index}`}
+			{...other}
+		>
+			{value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+		</div>
+	);
+}
 const StyledAppbar = styled(AppBar)(({ theme }) => ({
 	width: '100%',
 	opacity: 0,
@@ -85,7 +105,8 @@ const DarkModeSwitch = styled(Switch)(({ theme }) => ({
 	},
 }));
 export default function Layout(props) {
-	const [value, setValue] = useState('0');
+	const theme = useTheme();
+	const [value, setValue] = useState(0);
 	const [checked, setChecked] = useState(false);
 	const handleChange = (e) => {
 		props.setIsThemeLight((cur) => {
@@ -100,8 +121,7 @@ export default function Layout(props) {
 				<Tabs
 					value={value}
 					onChange={(event, newValue) => {
-						console.log(newValue);
-						if (newValue !== '100') {
+						if (newValue !== 100) {
 							setValue(newValue);
 							props.setPage(newValue);
 						}
@@ -115,11 +135,11 @@ export default function Layout(props) {
 						},
 					}}
 				>
-					<Tab label='Home' value='0' icon={<HomeIcon />} disableRipple />
-					<Tab label='Home' value='1' icon={<HomeIcon />} disableRipple />
-					<Tab label='Home' value='2' icon={<HomeIcon />} disableRipple />
-					<Tab label='Home' value='3' icon={<HomeIcon />} disableRipple />
-					<Tab label='Home' value='4' icon={<HomeIcon />} disableRipple />
+					<Tab label='Home' value={0} icon={<HomeIcon />} disableRipple />
+					<Tab label='Home' value={1} icon={<HomeIcon />} disableRipple />
+					<Tab label='Home' value={2} icon={<HomeIcon />} disableRipple />
+					<Tab label='Home' value={3} icon={<HomeIcon />} disableRipple />
+					<Tab label='Home' value={4} icon={<HomeIcon />} disableRipple />
 					<Tab
 						disableRipple
 						component='span'
@@ -131,11 +151,32 @@ export default function Layout(props) {
 								sx={{ justifySelf: 'center', alignSelf: 'center' }}
 							/>
 						}
-						value='100'
+						value={100}
 					></Tab>
 				</Tabs>
 			</StyledAppbar>
-			{props.children}
+			<SwipeableViews
+				aixs={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+				index={value}
+				// onChangeIndex={handleChangeIndex}
+			>
+				<TabPanel value={value} index={0} dir={theme.direction}>
+					<Page1 />
+				</TabPanel>
+				<TabPanel value={value} index={1} dir={theme.direction}>
+					<Page2 />
+				</TabPanel>
+				<TabPanel value={value} index={2} dir={theme.direction}>
+					<Page2 />
+				</TabPanel>
+				<TabPanel value={value} index={3} dir={theme.direction}>
+					<Page2 />
+				</TabPanel>
+				<TabPanel value={value} index={4} dir={theme.direction}>
+					<Page2 />
+				</TabPanel>
+			</SwipeableViews>
+			{/* {props.children} */}
 		</div>
 	);
 }
