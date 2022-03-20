@@ -8,7 +8,7 @@ import {
 	Tab,
 	useTheme,
 } from '@mui/material';
-import { useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import HomeIcon from '@mui/icons-material/Home';
 import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
 import Page1 from '../pages/Page1';
@@ -87,10 +87,11 @@ const DarkModeSwitch = styled(Switch)(({ theme }) => ({
 		borderRadius: 20 / 2,
 	},
 }));
-export default function Layout(props) {
+export default function Layout(props, ref) {
 	const theme = useTheme();
 	const [page, setPage] = useState(0);
 	const [darkModeChecked, setdarkModeChecked] = useState(false);
+	const layoutRef = useRef();
 	const handleDarkModeChange = (e) => {
 		props.setIsThemeLight((cur) => {
 			setdarkModeChecked(cur);
@@ -105,8 +106,17 @@ export default function Layout(props) {
 	const handleChangeSwipeableViewsIndex = (v) => {
 		setPage(v);
 	};
+	useEffect(() => {
+		const handleWheel = (e) => {
+			if (e.wheelDelta < 0) setPage((cur) => (cur < 4 ? cur + 1 : 0));
+			if (e.wheelDelta > 0) setPage((cur) => (cur > 0 ? cur - 1 : 4));
+		};
+		const layoutRefCur = layoutRef.current;
+		layoutRefCur.addEventListener('wheel', handleWheel);
+	}, []);
+
 	return (
-		<div>
+		<div ref={layoutRef}>
 			<CssBaseline />
 			<StyledAppbar>
 				<Tabs
