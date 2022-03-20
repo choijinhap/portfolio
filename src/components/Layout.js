@@ -107,9 +107,15 @@ export default function Layout(props, ref) {
 		setPage(v);
 	};
 	useEffect(() => {
+		let timer;
 		const handleWheel = (e) => {
-			if (e.wheelDelta < 0) setPage((cur) => (cur < 4 ? cur + 1 : 0));
-			if (e.wheelDelta > 0) setPage((cur) => (cur > 0 ? cur - 1 : 4));
+			if (!timer) {
+				timer = setTimeout(() => {
+					if (e.wheelDelta < 0) setPage((cur) => (cur < 4 ? cur + 1 : 0));
+					if (e.wheelDelta > 0) setPage((cur) => (cur > 0 ? cur - 1 : 4));
+					timer = null;
+				}, 200);
+			}
 		};
 		const layoutRefCur = layoutRef.current;
 		layoutRefCur.addEventListener('wheel', handleWheel);
