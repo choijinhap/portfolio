@@ -158,8 +158,9 @@ export default function Layout(props, ref) {
 				</Tabs>
 			</StyledAppbar>
 			<SwipeableViews
-				aixs={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+				axis='y'
 				index={page}
+				animateHeight={true}
 				onChangeIndex={handleChangeSwipeableViewsIndex}
 			>
 				<Page1 />
