@@ -16,6 +16,7 @@ import Page2 from '../pages/Page2';
 import Page3 from '../pages/Page3';
 import Page4 from '../pages/Page4';
 import Page5 from '../pages/Page5';
+import { useNavigate } from 'react-router-dom';
 
 const StyledAppbar = styled(AppBar)(({ theme }) => ({
 	width: '100%',
@@ -87,13 +88,13 @@ const DarkModeSwitch = styled(Switch)(({ theme }) => ({
 		borderRadius: 20 / 2,
 	},
 }));
-export default function Layout(props, ref) {
-	const theme = useTheme();
+export default function Layout({ setIsThemeLight, children }) {
 	const [page, setPage] = useState(0);
 	const [darkModeChecked, setdarkModeChecked] = useState(false);
 	const layoutRef = useRef();
+	const navigate = useNavigate();
 	const handleDarkModeChange = (e) => {
-		props.setIsThemeLight((cur) => {
+		setIsThemeLight((cur) => {
 			setdarkModeChecked(cur);
 			return !cur;
 		});
@@ -102,9 +103,6 @@ export default function Layout(props, ref) {
 		if (newValue !== 100) {
 			setPage(newValue);
 		}
-	};
-	const handleChangeSwipeableViewsIndex = (v) => {
-		setPage(v);
 	};
 	useEffect(() => {
 		let timer;
@@ -137,11 +135,41 @@ export default function Layout(props, ref) {
 						},
 					}}
 				>
-					<Tab label='Home' value={0} icon={<HomeIcon />} disableRipple />
-					<Tab label='Home' value={1} icon={<HomeIcon />} disableRipple />
-					<Tab label='Home' value={2} icon={<HomeIcon />} disableRipple />
-					<Tab label='Home' value={3} icon={<HomeIcon />} disableRipple />
-					<Tab label='Home' value={4} icon={<HomeIcon />} disableRipple />
+					<Tab
+						label='Home'
+						value={0}
+						icon={<HomeIcon />}
+						onClick={() => navigate('/1')}
+						disableRipple
+					/>
+					<Tab
+						label='Home'
+						value={1}
+						icon={<HomeIcon />}
+						onClick={() => navigate('/2')}
+						disableRipple
+					/>
+					<Tab
+						label='Home'
+						value={2}
+						icon={<HomeIcon />}
+						onClick={() => navigate('/3')}
+						disableRipple
+					/>
+					<Tab
+						label='Home'
+						value={3}
+						icon={<HomeIcon />}
+						onClick={() => navigate('/4')}
+						disableRipple
+					/>
+					<Tab
+						label='Home'
+						value={4}
+						icon={<HomeIcon />}
+						onClick={() => navigate('/5')}
+						disableRipple
+					/>
 					<Tab
 						disableRipple
 						component='span'
@@ -157,18 +185,7 @@ export default function Layout(props, ref) {
 					></Tab>
 				</Tabs>
 			</StyledAppbar>
-			<SwipeableViews
-				axis='y'
-				index={page}
-				animateHeight={true}
-				onChangeIndex={handleChangeSwipeableViewsIndex}
-			>
-				<Page1 />
-				<Page2 />
-				<Page3 />
-				<Page4 />
-				<Page5 />
-			</SwipeableViews>
+			{children}
 		</div>
 	);
 }
